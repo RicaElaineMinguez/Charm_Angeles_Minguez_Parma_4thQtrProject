@@ -114,28 +114,26 @@ public class Screen4Controller implements Initializable {
                     playerturn = Player.playerList.get(1);   
                 }
                 
-//                String filename = "q4proj/"+playerturn.getShape()+"1.png";
-//                Image tileicon = new Image(filename);
-//                source.setImage(tileicon);
-//                
-//                Tile.incRoundNum();
-//                
-//                int tilePopulation = Tile.grid[x][y].getNumberStatus();
-//                System.out.println(tilePopulation);
+                Tile thisTile = Tile.grid[x][y];
                 
-                int tilePopulation = Tile.grid[x][y].getNumberStatus();
+                int tilePopulation = thisTile.getNumberStatus();
                 System.out.println(tilePopulation);
                 String filename = null;
                 
-                if(tilePopulation==0) filename = "q4proj/"+playerturn.getShape()+"1.png";
-                else if(tilePopulation==1) filename = "q4proj/"+playerturn.getShape()+"2.png";
-                else if(tilePopulation==2 && playerturn.getShape()!="triangle") filename = "q4proj/"+playerturn.getShape()+"3.png";
+                if(tilePopulation<thisTile.getCriticalMass() && tilePopulation<playerturn.getCriticalMass() && (thisTile.getPlayerStatus().equals("empty") || thisTile.getPlayerStatus().equals(playerturn.getName()))) {
+                    
+                    if(tilePopulation==0) filename = "q4proj/"+playerturn.getShape()+"1.png";
+                    else if(tilePopulation==1) filename = "q4proj/"+playerturn.getShape()+"2.png";
+                    else if(tilePopulation==2 && !playerturn.getShape().equals("triangle")) filename = "q4proj/"+playerturn.getShape()+"3.png";
+                
+                }
                 
                 Image tileicon = new Image(filename);
                 source.setImage(tileicon);
                 
                 Tile.incRoundNum();
-                Tile.grid[x][y].incNumberSatus();
+                thisTile.incNumberSatus();
+                thisTile.setPlayerStatus(playerturn.getName());
 //                
                 
 //            int columnIndex = GridPane.getColumnIndex(source);
