@@ -34,6 +34,15 @@ public class Screen4Controller implements Initializable {
 
     @FXML private Button back;
     @FXML public GridPane board;
+    @FXML public GridPane laserCol;
+    @FXML public GridPane laaserCol;
+    @FXML public GridPane llaserCol;
+    @FXML public GridPane lasserCol;
+    private ArrayList<ImageView> LCimgs = new ArrayList(8);
+    private ArrayList<ImageView> LCiimgs = new ArrayList(8);
+    private ArrayList<ImageView> LCimmgs = new ArrayList(8);
+    private ArrayList<ImageView> LCimggs = new ArrayList(8);
+    
 //    private ImageView[][] realBoard = new ImageView[8][8];
     private ArrayList<ImageView> realBoard = new ArrayList(64);
 
@@ -114,28 +123,26 @@ public class Screen4Controller implements Initializable {
                     playerturn = Player.playerList.get(1);   
                 }
                 
-//                String filename = "q4proj/"+playerturn.getShape()+"1.png";
-//                Image tileicon = new Image(filename);
-//                source.setImage(tileicon);
-//                
-//                Tile.incRoundNum();
-//                
-//                int tilePopulation = Tile.grid[x][y].getNumberStatus();
-//                System.out.println(tilePopulation);
+                Tile thisTile = Tile.grid[x][y];
                 
-                int tilePopulation = Tile.grid[x][y].getNumberStatus();
+                int tilePopulation = thisTile.getNumberStatus();
                 System.out.println(tilePopulation);
                 String filename = null;
                 
-                if(tilePopulation==0) filename = "q4proj/"+playerturn.getShape()+"1.png";
-                else if(tilePopulation==1) filename = "q4proj/"+playerturn.getShape()+"2.png";
-                else if(tilePopulation==2 && playerturn.getShape()!="triangle") filename = "q4proj/"+playerturn.getShape()+"3.png";
+                if(tilePopulation<thisTile.getCriticalMass() && tilePopulation<playerturn.getCriticalMass() && (thisTile.getPlayerStatus().equals("empty") || thisTile.getPlayerStatus().equals(playerturn.getName()))) {
+                    
+                    if(tilePopulation==0) filename = "q4proj/"+playerturn.getShape()+"1.png";
+                    else if(tilePopulation==1) filename = "q4proj/"+playerturn.getShape()+"2.png";
+                    else if(tilePopulation==2 && !playerturn.getShape().equals("triangle")) filename = "q4proj/"+playerturn.getShape()+"3.png";
+                
+                }
                 
                 Image tileicon = new Image(filename);
                 source.setImage(tileicon);
                 
                 Tile.incRoundNum();
-                Tile.grid[x][y].incNumberSatus();
+                thisTile.incNumberSatus();
+                thisTile.setPlayerStatus(playerturn.getName());
 //                
                 
 //            int columnIndex = GridPane.getColumnIndex(source);
@@ -169,10 +176,74 @@ public class Screen4Controller implements Initializable {
 //      }
 //    }
   }
-//    @Override
+     @FXML 
+    private void laserCol(){ 
+        
+            for(int i=0; i<8; i++){
+                ImageView icon = new ImageView(new Image(getClass().getResourceAsStream("emptytile.png")));
+                icon.setFitHeight(30);
+                icon.setFitWidth(30);
+                LCimgs.add(icon);
+                int row = i;
+                int col = 0;
+                laserCol.add(icon,col,row);
+                System.out.println("col"); 
+            }
+    }
+    
+             @FXML 
+    private void laaserCol(){ 
+        
+            for(int i=0; i<8; i++){
+                ImageView icon = new ImageView(new Image(getClass().getResourceAsStream("emptytile.png")));
+                icon.setFitHeight(30);
+                icon.setFitWidth(30);
+                LCiimgs.add(icon);
+                int row = i;
+                int col = 0;
+                laaserCol.add(icon,col,row);
+                System.out.println("col"); 
+            }
+    }
+    
+             @FXML 
+    private void lasserCol(){ 
+        
+            for(int i=0; i<8; i++){
+                ImageView icon = new ImageView(new Image(getClass().getResourceAsStream("emptytile.png")));
+                icon.setFitHeight(30);
+                icon.setFitWidth(30);
+                LCimmgs.add(icon);
+                int row = 0;
+                int col = i;
+                lasserCol.add(icon,col,row);
+                System.out.println("col"); 
+            }
+    }
+    
+             @FXML 
+    private void llaserCol(){ 
+        
+            for(int i=0; i<8; i++){
+                ImageView icon = new ImageView(new Image(getClass().getResourceAsStream("emptytile.png")));
+                icon.setFitHeight(30);
+                icon.setFitWidth(30);
+                LCimggs.add(icon);
+                int row = 0;
+                int col = i;
+                llaserCol.add(icon,col,row);
+                System.out.println("col"); 
+            }
+    }
+    
+    @Override
     public void initialize(URL url, ResourceBundle rb) {
         makeBoard();
         Tile.makeGrid();
+        laserCol();
+        laaserCol();
+        lasserCol();
+        llaserCol();
     }    
 
 }
