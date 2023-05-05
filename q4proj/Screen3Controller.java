@@ -76,7 +76,7 @@ public class Screen3Controller implements Initializable {
         Scene currentScene = node.getScene();
         Stage currentStage = (Stage) currentScene.getWindow();
         
-        Parent root = FXMLLoader.load(getClass().getResource("Screen4.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("Screen4 - Copy.fxml"));
         Scene helpScene = new Scene(root);
         currentStage.hide();
         currentStage.setScene(helpScene);
