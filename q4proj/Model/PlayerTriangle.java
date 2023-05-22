@@ -1,7 +1,7 @@
 package q4proj.Model;
 public class PlayerTriangle extends Player{
   public PlayerTriangle(String n, int CM){
-    super( n,"Triangle", 3);
+    super( n,"triangle", 3);
   }
 
   @Override

@@ -1,7 +1,7 @@
 package q4proj.Model;
 public class PlayerSquare extends Player{
   public PlayerSquare(String n, int CM){
-    super( n,"Square", 4);
+    super( n,"square", 4);
   }
 
   @Override

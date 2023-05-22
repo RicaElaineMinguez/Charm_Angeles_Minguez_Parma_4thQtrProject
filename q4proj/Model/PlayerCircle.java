@@ -1,7 +1,7 @@
 package q4proj.Model;
 public class PlayerCircle extends Player{
   public PlayerCircle(String n, int CM){
-    super( n,"Circle", 4);
+    super( n,"circle", 4);
   }
 
   @Override

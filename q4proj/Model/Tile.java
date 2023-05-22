@@ -7,7 +7,6 @@ public class Tile {
   public String playerStatus;
   public int criticalMass, numberStatus;
   public static int roundNum = 1;
-  public Image icon;
   
   //make location a 2d array of ints
   public static Tile[][] grid = new Tile[8][8];
@@ -35,9 +34,17 @@ public class Tile {
   public void setNumberStatus(int n){
     this.numberStatus = n;
   }
+  
+  public void incNumberSatus() {
+      this.numberStatus++;
+  }
 
   public int getRoundNum(){
     return roundNum;
+  }
+  
+  public static void incRoundNum() {
+      roundNum++;
   }
   
   public static void makeGrid() {
@@ -49,7 +56,6 @@ public class Tile {
         grid[x][y] = tile;
         tile.numberStatus = 0;
         tile.playerStatus = "empty";
-        tile.icon = null;
 //        Screen4Controller.board.add(tile.icon,y,x);
         
 //        tile.icon.setOnMouseClicked(event -> {
@@ -60,13 +66,13 @@ public class Tile {
 //            source.setImage(icon);
 //        });
         
-        tile.initializeNumberStatus(x, y);
+        tile.initializeCriticalMass(x, y);
         
       }
     }
   }
   
-  public void initializeNumberStatus(int x, int y){
+  public void initializeCriticalMass(int x, int y){
       if((x == 0 || x == 7) && (y > 0 && y < 7)) {
           this.criticalMass = 3;
         }

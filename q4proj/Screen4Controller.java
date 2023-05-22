@@ -24,6 +24,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.*;
 import java.util.ArrayList;
 import q4proj.Model.*;
+import java.lang.Math;  
 
 
 /**
@@ -84,14 +85,14 @@ public class Screen4Controller implements Initializable {
 //    }
     //code above is from Sai Dandem on https://stackoverflow.com/questions/69429420/javafx-update-imageview-on-gridpane-click
 
-    @FXML
-    private void clickCell(MouseEvent event){
-            ImageView source = (ImageView) event.getTarget();
-//            int columnIndex = GridPane.getColumnIndex(source);
-//            int rowIndex = GridPane.getRowIndex(source);
-            Image icon = new Image("q4proj/circle1.png");
-            source.setImage(icon);
-    }
+//    @FXML
+//    private void clickCell(MouseEvent event){
+//            ImageView source = (ImageView) event.getTarget();
+////            int columnIndex = GridPane.getColumnIndex(source);
+////            int rowIndex = GridPane.getRowIndex(source);
+//            Image icon = new Image("q4proj/circle1.png");
+//            source.setImage(icon);
+//    }
 
     @FXML
     public void makeBoard() {
@@ -143,39 +144,11 @@ public class Screen4Controller implements Initializable {
                 Tile.incRoundNum();
                 thisTile.incNumberSatus();
                 thisTile.setPlayerStatus(playerturn.getName());
-//                
-                
-//            int columnIndex = GridPane.getColumnIndex(source);
-//            int rowIndex = GridPane.getRowIndex(source);
-//                Player x = Player.playerList.get(0);
-//                String filename = "q4proj/"+x.getShape()+"1.png";
-//                System.out.println(filename);
-//                Image tileicon = new Image(filename);
-//                source.setImage(tileicon);
             });
         }
-
-//    ImageView[][] imageGrid = new ImageView[8][8];
-
-//    for(int x = 0; x < 8; x++) {
-//      for(int y = 0; y < 8; y++) {
-//        
-//        ImageView tile = new ImageView();
-////        imageGrid[x][y] = tile;
-//        board.add(tile,y,x);
-//        tile.setOnMouseClicked(event -> {
-//            ImageView source = (ImageView) event.getTarget();
-////            int columnIndex = GridPane.getColumnIndex(source);
-////            int rowIndex = GridPane.getRowIndex(source);
-//            Image icon = new Image("q4proj/circle1.png");
-//            source.setImage(icon);
-//            
-//        });
-//        
-//        
-//      }
-//    }
   }
+    
+    
      @FXML 
     private void laserCol1(){ 
         
@@ -235,6 +208,22 @@ public class Screen4Controller implements Initializable {
                 System.out.println("row"); 
             }
     }
+    
+    private void initializeLaser(){
+        int laserLocation = ((int)Math.random())%32;
+        if(laserLocation<8){
+            Image laserIcon = new Image("lasertop.png");
+            LR1imgs.get(laserLocation).setImage(laserIcon);
+        }
+        else if (laserLocation<16) {
+            laserLocation -= 8;
+            Image laserIcon = new Image("laserleft.png");
+            LCimgs1.get(laserLocation).setImage(laserIcon);
+        }
+    }
+    
+    
+    
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
