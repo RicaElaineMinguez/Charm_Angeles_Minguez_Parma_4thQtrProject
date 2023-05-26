@@ -7,6 +7,7 @@ public class Tile {
   public String playerStatus;
   public int criticalMass, numberStatus;
   public static int roundNum = 1;
+  public ImageView tileView;
   
   //make location a 2d array of ints
   public static Tile[][] grid = new Tile[8][8];
