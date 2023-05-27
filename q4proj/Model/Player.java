@@ -1,5 +1,6 @@
 package q4proj.Model;
 import java.util.ArrayList;
+import javafx.scene.image.Image;
 
 public class Player {
   protected String name;
@@ -70,5 +71,18 @@ public class Player {
   
   public void disperse(int x, int y){
       
+  }
+  
+  public void updateTileView(int x, int y){
+    if(Tile.grid[x][y].numberStatus>0 && !(Tile.grid[x][y].playerStatus.equals("empty"))){
+        String filename = "q4proj/" + Tile.grid[x][y].playerStatus + Tile.grid[x][y].numberStatus + ".png";
+        Image icon = new Image(filename);
+        Tile.grid[x][y].tileView.setImage(icon);
+    }
+    else{
+        String filename = "q4proj/emptytile.png";
+        Image icon = new Image(filename);
+        Tile.grid[x][y].tileView.setImage(icon);
+    } 
   }
 }
