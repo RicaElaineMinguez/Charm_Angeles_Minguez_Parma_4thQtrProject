@@ -39,11 +39,13 @@ public class Screen4Controller implements Initializable {
     @FXML public GridPane laserCol2;
     @FXML public GridPane laserRow1;
     @FXML public GridPane laserRow2;
+    
     private ArrayList<ImageView> LCimgs1 = new ArrayList(8);
     private ArrayList<ImageView> LCimgs2 = new ArrayList(8);
     private ArrayList<ImageView> LR1imgs = new ArrayList(8);
     private ArrayList<ImageView> LR2imgs = new ArrayList(8);
     private ArrayList<ImageView> realBoard = new ArrayList(64);
+    private String winner;
     
     Random randomizer = new Random();
     int laserLocation = randomizer.nextInt(32);
@@ -449,6 +451,32 @@ public class Screen4Controller implements Initializable {
         
     }
     
+    
+    @FXML
+    
+    public void winner(Event event) throws IOException{
+        
+        
+        if (Tile.roundNum>2) {
+            
+            if() winner = "1";
+            if() winner = "2";
+            
+            Node node = (Node) event.getSource();
+        Scene currentScene = node.getScene();
+        Stage currentStage = (Stage) currentScene.getWindow();
+        
+        Parent root = FXMLLoader.load(getClass().getResource("Screen5.fxml"));
+        Scene helpScene = new Scene(root);
+        currentStage.hide();
+        currentStage.setScene(helpScene);
+        currentStage.show();   
+        
+        
+            
+        }
+    }
+    
 //    public void fire(ImageView laser){
 //        laser.setOnMouseClicked(event -> {
 //            ImageView source = (ImageView) event.getTarget();
@@ -473,3 +501,5 @@ public class Screen4Controller implements Initializable {
 //generate for loop in a for loop to generate the 8x8 gridpane with imageviews
 //use gridpane coords to access each imageview
 //overlay th imageview 2d array on the gridpane somehow
+//helpful resources:
+//transfer data between scenes: https://www.youtube.com/watch?v=wxhGKR3PQpo
