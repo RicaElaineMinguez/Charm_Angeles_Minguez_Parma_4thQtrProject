@@ -7,6 +7,7 @@ public class Tile {
   public String playerStatus;
   public int criticalMass, numberStatus;
   public static int roundNum = 1;
+  public ImageView tileView;
   
   //make location a 2d array of ints
   public static Tile[][] grid = new Tile[8][8];
@@ -46,6 +47,7 @@ public class Tile {
   public static void incRoundNum() {
       roundNum++;
   }
+  
   
   public static void makeGrid() {
     
@@ -91,17 +93,20 @@ public class Tile {
   }
 
   public static void play(int x, int y, Player A){
-    
-    if(grid[x][y].numberStatus < A.getCriticalMass() && grid[x][y].numberStatus < grid[x][y].criticalMass){
       
-      if(grid[x][y].playerStatus == "empty" || grid[x][y].playerStatus == A.getShape()){
+    if(grid[x][y].playerStatus == "empty" || grid[x][y].playerStatus == A.getShape()){
         
-        grid[x][y].numberStatus++;
-        grid[x][y].playerStatus = A.getShape();
-        
+      grid[x][y].numberStatus++;
+      grid[x][y].playerStatus = A.getShape();
+      
+      if(grid[x][y].numberStatus < A.getCriticalMass() && grid[x][y].numberStatus < grid[x][y].criticalMass){
+      String filename = "q4proj/" + grid[x][y].playerStatus + grid[x][y].numberStatus + ".png";
+      Image icon = new Image(filename);
+      grid[x][y].tileView.setImage(icon);
       }
+      
+      else A.disperse(x, y);
     }
-    else A.disperse(x, y);
   }
   
   public static void nextTurn() {
