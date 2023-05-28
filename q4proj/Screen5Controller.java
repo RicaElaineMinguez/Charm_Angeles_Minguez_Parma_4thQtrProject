@@ -28,6 +28,13 @@ import q4proj.Model.*;
 public class Screen5Controller implements Initializable {
     
     @FXML
+    Label winnerLabel;
+    
+    public void displayWinner(String winner){
+        winnerLabel.setText("Player " + winner + " wins!");
+    }
+    
+    @FXML
     private Button back;
     
     @FXML
