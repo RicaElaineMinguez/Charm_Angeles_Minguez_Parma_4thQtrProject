@@ -7,21 +7,18 @@ public class PlayerCircle extends Player{
   @Override
   public void disperse(int x, int y) {
     if (Tile.grid[x][y].getNumberStatus() == Tile.grid[x][y].getCriticalMass()||Tile.grid[x][y].getNumberStatus() == criticalMass) { 
-      Tile.grid[x+1][y].setPlayerStatus("Circle");
-       Tile.grid[x-1][y].setPlayerStatus("Circle");
-      Tile.grid[x][y+1].setPlayerStatus("Circle");
-       Tile.grid[x][y-1].setPlayerStatus("Circle");
 
-      Tile.grid[x+1][y].setNumberStatus(Tile.grid[x+1][y].getNumberStatus() + 1);
-       Tile.grid[x-1][y].setNumberStatus(Tile.grid[x-1][y].getNumberStatus() + 1);
-       Tile.grid[x][y+1].setNumberStatus(Tile.grid[x][y+1].getNumberStatus() + 1);
-       Tile.grid[x][y-1].setNumberStatus(Tile.grid[x][y-1].getNumberStatus() + 1);
-
-      Tile.grid[x][y].setPlayerStatus("empty");
-      Tile.grid[x][y].setNumberStatus(0);
+        Tile.grid[x][y].setPlayerStatus("empty");
+        Tile.grid[x][y].setNumberStatus(0); 
+        updateTileView(x,y);
+        
+        updateIfTileExists((x+1),(y), "circle");
+        updateIfTileExists((x-1),(y), "circle");
+        updateIfTileExists((x),(y+1), "circle");
+        updateIfTileExists((x),(y-1), "circle");
     } 
 
-    Tile.nextTurn();
+//    Tile.nextTurn();
     
   }
 

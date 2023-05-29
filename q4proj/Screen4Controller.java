@@ -46,10 +46,11 @@ public class Screen4Controller implements Initializable {
     private ArrayList<ImageView> realBoard = new ArrayList(64);
     
     Random randomizer = new Random();
-
     int laserLocation = randomizer.nextInt(32);
     int line = laserLocation/8;
     int spot = laserLocation%8;
+    
+    static String win = null;
         
     @FXML
     private void backWindow(ActionEvent event)throws IOException{
@@ -77,29 +78,12 @@ public class Screen4Controller implements Initializable {
         currentStage.show();   
     }
 
-//    @FXML
-//    private void clickCell(){
-//        board.setOnMouseClicked(event -> {
-//            ImageView source = (ImageView) event.getTarget();
-////            int columnIndex = GridPane.getColumnIndex(source);
-////            int rowIndex = GridPane.getRowIndex(source);
-//            Image icon = new Image("q4proj/circle1.png");
-//            source.setImage(icon);
-//        });
-//    }
-    //code above is from Sai Dandem on https://stackoverflow.com/questions/69429420/javafx-update-imageview-on-gridpane-click
-
-//    @FXML
-//    private void clickCell(MouseEvent event){
-//            ImageView source = (ImageView) event.getTarget();
-////            int columnIndex = GridPane.getColumnIndex(source);
-////            int rowIndex = GridPane.getRowIndex(source);
-//            Image icon = new Image("q4proj/circle1.png");
-//            source.setImage(icon);
-//    }
-
     @FXML
     public void makeBoard() {
+        
+        
+        
+        Tile.makeGrid();
 
         for(int i=0; i<64; i++){
             ImageView icon = new ImageView(new Image(getClass().getResourceAsStream("emptytile.png")));
@@ -110,8 +94,9 @@ public class Screen4Controller implements Initializable {
             int col = i%8;
             board.add(icon,col,row);
             System.out.println("create");
-
-
+            
+            //new addition: integrate board gridpane w/ grid of Tiles
+            Tile.grid[row][col].tileView = icon;
 
             icon.setOnMouseClicked(event -> {
                 System.out.println("click");
@@ -128,30 +113,16 @@ public class Screen4Controller implements Initializable {
                     playerturn = Player.playerList.get(1);   
                 }
                 
-                Tile thisTile = Tile.grid[x][y];
                 
-                int tilePopulation = thisTile.getNumberStatus();
-                System.out.println(tilePopulation);
-                String filename = null;
-                
-                if(tilePopulation<thisTile.getCriticalMass() && tilePopulation<playerturn.getCriticalMass() && (thisTile.getPlayerStatus().equals("empty") || thisTile.getPlayerStatus().equals(playerturn.getName()))) {
-                    
-                    if(tilePopulation==0) filename = "q4proj/"+playerturn.getShape()+"1.png";
-                    else if(tilePopulation==1) filename = "q4proj/"+playerturn.getShape()+"2.png";
-                    else if(tilePopulation==2 && !playerturn.getShape().equals("triangle")) filename = "q4proj/"+playerturn.getShape()+"3.png";
-                
-                }
-                
-                Image tileicon = new Image(filename);
-                source.setImage(tileicon);
-                
+                Tile.play(x, y, playerturn);
+                                
                 Tile.incRoundNum();
-                thisTile.incNumberSatus();
-                thisTile.setPlayerStatus(playerturn.getName());
                 shiftLaser(line, spot);
                 int newLocation = ((line*8)+spot+1)%32;
                 line = newLocation/8;
                 spot = newLocation%8;
+                
+                if(Tile.roundNum==20) checkWin(win);
             });
         }
   }
@@ -161,14 +132,38 @@ public class Screen4Controller implements Initializable {
     private void laserCol1(){ 
         
             for(int i=0; i<8; i++){
+                ColLaser laserY = new ColLaser();
+                laserY.deactivate();
                 ImageView icon = new ImageView(new Image(getClass().getResourceAsStream("emptytile.png")));
+                laserY.space = icon;
+                laserY.location = i;
                 icon.setFitHeight(30);
                 icon.setFitWidth(30);
                 LCimgs1.add(icon);
                 int row = i;
                 int col = 0;
                 laserCol1.add(icon,col,row);
-                System.out.println("col"); 
+                System.out.println("col");
+                
+                icon.setOnMouseClicked(event -> {
+                    ImageView source = (ImageView) event.getTarget();
+                    for (Laser L : Laser.laserList){
+                        if(L.space==source && L.status.equals("active")) {
+                            System.out.println("laser");
+                            for(int y=0; y<8; y++){
+                                int x = L.getLocation();
+                                Tile target = Tile.grid[x][y];
+                                System.out.println(target.getPlayerStatus());
+                
+                                target.numberStatus = 0;
+                                target.playerStatus = "empty";
+                                                                
+                                Image tileicon = new Image("q4proj/emptytile.png");
+                                target.tileView.setImage(tileicon);
+                            }
+                        }
+                    }
+                });
             }
     }
     
@@ -176,7 +171,11 @@ public class Screen4Controller implements Initializable {
     private void laserCol2(){ 
         
             for(int i=0; i<8; i++){
+                ColLaser laserY = new ColLaser();
+                laserY.deactivate();
                 ImageView icon = new ImageView(new Image(getClass().getResourceAsStream("emptytile.png")));
+                laserY.space = icon;
+                laserY.location = i;
                 icon.setFitHeight(30);
                 icon.setFitWidth(30);
                 LCimgs2.add(icon);
@@ -184,6 +183,27 @@ public class Screen4Controller implements Initializable {
                 int col = 0;
                 laserCol2.add(icon,col,row);
                 System.out.println("col"); 
+                
+                icon.setOnMouseClicked(event -> {
+                    ImageView source = (ImageView) event.getTarget();
+                    for (Laser L : Laser.laserList){
+                        if(L.space==source && L.status.equals("active")) {
+                            System.out.println("laser");
+                            for(int y=0; y<8; y++){
+                                int x = L.getLocation();
+                                System.out.println(y);
+                                Tile target = Tile.grid[x][y];
+                                System.out.println(target.getPlayerStatus());
+                
+                                target.numberStatus = 0;
+                                target.playerStatus = "empty";
+                                                                
+                                Image tileicon = new Image("q4proj/emptytile.png");
+                                target.tileView.setImage(tileicon);
+                            }
+                        }
+                    }
+                });
             }
     }
     
@@ -191,7 +211,11 @@ public class Screen4Controller implements Initializable {
     private void laserRow1(){ 
         
             for(int i=0; i<8; i++){
+                RowLaser laserX = new RowLaser();
+                laserX.deactivate();
                 ImageView icon = new ImageView(new Image(getClass().getResourceAsStream("emptytile.png")));
+                laserX.space = icon;
+                laserX.location = i;
                 icon.setFitHeight(30);
                 icon.setFitWidth(30);
                 LR1imgs.add(icon);
@@ -199,6 +223,26 @@ public class Screen4Controller implements Initializable {
                 int col = i;
                 laserRow1.add(icon,col,row);
                 System.out.println("row"); 
+                
+                icon.setOnMouseClicked(event -> {
+                    ImageView source = (ImageView) event.getTarget();
+                    for (Laser L : Laser.laserList){
+                        if(L.space==source && L.status.equals("active")) {
+                            System.out.println("laser");
+                            for(int x=0; x<8; x++){
+                                int y = L.getLocation();
+                                Tile target = Tile.grid[x][y];
+                                System.out.println(target.getPlayerStatus());
+                
+                                target.numberStatus = 0;
+                                target.playerStatus = "empty";
+                                                                
+                                Image tileicon = new Image("q4proj/emptytile.png");
+                                target.tileView.setImage(tileicon);
+                            }
+                        }
+                    }
+                });
             }
     }
     
@@ -206,7 +250,11 @@ public class Screen4Controller implements Initializable {
     private void laserRow2(){ 
         
             for(int i=0; i<8; i++){
+                RowLaser laserX = new RowLaser();
+                laserX.deactivate();
                 ImageView icon = new ImageView(new Image(getClass().getResourceAsStream("emptytile.png")));
+                laserX.space = icon;
+                laserX.location = i;
                 icon.setFitHeight(30);
                 icon.setFitWidth(30);
                 LR2imgs.add(icon);
@@ -214,10 +262,34 @@ public class Screen4Controller implements Initializable {
                 int col = i;
                 laserRow2.add(icon,col,row);
                 System.out.println("row"); 
+                
+                icon.setOnMouseClicked(event -> {
+                    ImageView source = (ImageView) event.getTarget();
+                    for (Laser L : Laser.laserList){
+                        if(L.space==source && L.status.equals("active")) {
+                            System.out.println("laser");
+                            for(int x=0; x<8; x++){
+                                int y = L.getLocation();
+                                Tile target = Tile.grid[x][y];
+                                System.out.println(target.getPlayerStatus());
+                
+                                target.numberStatus = 0;
+                                target.playerStatus = "empty";
+                                                                
+                                Image tileicon = new Image("q4proj/emptytile.png");
+                                target.tileView.setImage(tileicon);
+                            }
+                        }
+                    }
+                });
             }
     }
     
     private void initializeLaser(int line, int spot){
+        laserRow1();
+        laserRow2();
+        laserCol1();
+        laserCol2();
 
         
         System.out.println("Line: " + line + "; Spot: " + spot);
@@ -231,6 +303,9 @@ public class Screen4Controller implements Initializable {
                     Image laser = new Image("q4proj/lasertop.png");
                     location = LR1imgs.get(spot);
                     location.setImage(laser);
+                    for (Laser L : Laser.laserList){
+                        if(L.space==location) L.activate();
+                    }
                     break;
                 }
             case 1:
@@ -238,6 +313,9 @@ public class Screen4Controller implements Initializable {
                     Image laser = new Image("q4proj/laserleft.png");
                     location = LCimgs1.get(spot);
                     location.setImage(laser);
+                    for (Laser L : Laser.laserList){
+                        if(L.space==location) L.activate();
+                    }
                     break;
                 }
             case 2:
@@ -245,6 +323,9 @@ public class Screen4Controller implements Initializable {
                     Image laser = new Image("q4proj/laserbottom.png");
                     location = LR2imgs.get(spot);
                     location.setImage(laser);
+                    for (Laser L : Laser.laserList){
+                        if(L.space==location) L.activate();
+                    }
                     break;
                 }
             case 3:
@@ -252,6 +333,9 @@ public class Screen4Controller implements Initializable {
                     Image laser = new Image("q4proj/laserright.png");
                     location = LCimgs2.get(spot);
                     location.setImage(laser);
+                    for (Laser L : Laser.laserList){
+                        if(L.space==location) L.activate();
+                    }
                     break;
                 }
         }
@@ -265,24 +349,36 @@ public class Screen4Controller implements Initializable {
                 {
                     location = LR1imgs.get(spot);
                     location.setImage(blankTile);
+                    for (Laser L : Laser.laserList){
+                        if(L.space==location) L.deactivate();
+                    }
                     break;
                 }
             case 1:
                 {
                     location = LCimgs1.get(spot);
                     location.setImage(blankTile);
+                    for (Laser L : Laser.laserList){
+                        if(L.space==location) L.deactivate();
+                    }
                     break;
                 }
             case 2:
                 {
                     location = LR2imgs.get(spot);
                     location.setImage(blankTile);
+                    for (Laser L : Laser.laserList){
+                        if(L.space==location) L.deactivate();
+                    }
                     break;
                 }
             case 3:
                 {
                     location = LCimgs2.get(spot);
                     location.setImage(blankTile);
+                    for (Laser L : Laser.laserList){
+                        if(L.space==location) L.deactivate();
+                    }
                     break;
                 }
         }
@@ -297,6 +393,9 @@ public class Screen4Controller implements Initializable {
                     laser = new Image("q4proj/lasertop.png");
                     location = LR1imgs.get(spot);
                     location.setImage(laser);
+                    for (Laser L : Laser.laserList){
+                        if(L.space==location) L.activate();
+                    }
                     break;
                 }
             case 1:
@@ -304,6 +403,9 @@ public class Screen4Controller implements Initializable {
                     laser = new Image("q4proj/laserleft.png");
                     location = LCimgs1.get(spot);
                     location.setImage(laser);
+                    for (Laser L : Laser.laserList){
+                        if(L.space==location) L.activate();
+                    }
                     break;
                 }
             case 2:
@@ -311,6 +413,9 @@ public class Screen4Controller implements Initializable {
                     laser = new Image("q4proj/laserbottom.png");
                     location = LR2imgs.get(spot);
                     location.setImage(laser);
+                    for (Laser L : Laser.laserList){
+                        if(L.space==location) L.activate();
+                    }
                     break;
                 }
             case 3:
@@ -318,35 +423,74 @@ public class Screen4Controller implements Initializable {
                     laser = new Image("q4proj/laserright.png");
                     location = LCimgs2.get(spot);
                     location.setImage(laser);
+                    for (Laser L : Laser.laserList){
+                        if(L.space==location) L.activate();
+                    }
                     break;
                 }
         }
+        
     }
     
-    public void fire(ImageView laser){
-        laser.setOnMouseClicked(event -> {
-            ImageView source = (ImageView) event.getTarget();
+    public void checkWin(String win){
+        win = null;
+        
+        int player1Count = 0;
+        int player2Count = 0;
+        
+        String player1Shape = Player.playerList.get(0).getShape();
+        String player2Shape = Player.playerList.get(1).getShape();
+        
+        for(int x=0; x<8; x++){
+            for(int y=0; y<8; y++){
+                if (Tile.grid[x][y].playerStatus.equals(player1Shape)) player1Count++;
+                else if (Tile.grid[x][y].playerStatus.equals(player2Shape)) player2Count++;
+            }
+        }
+        
+        
+        if(player1Count>player2Count) win = "Player 1 wins!";
+        else if(player1Count<player2Count) win = "Player 2 wins!";
+        else win = "Tie!";
+        
+        
+        try{
+            endGame(true);
+        }
+        catch(Exception e){
             
-        });
+        }
     }
     
+//    private void endGame(ActionEvent event) throws IOException{
+//       Node node = (Node) event.getSource();
+//        Scene currentScene = node.getScene();
+//        Stage currentStage = (Stage) currentScene.getWindow();
+//        
+//        Parent root = FXMLLoader.load(getClass().getResource("Screen5.fxml"));
+//        Scene helpScene = new Scene(root);
+//        currentStage.hide();
+//        currentStage.setScene(helpScene);
+//        currentStage.show();   
+//   }
+    
+    public void endGame(boolean gameDone) throws IOException {
+        if (gameDone == true) {
+            Parent menu_parent = FXMLLoader.load(getClass().getResource("Screen5.fxml"));
+            Scene SceneMenu = new Scene(menu_parent);
+            Stage stage = (Stage)back.getParent().getScene().getWindow();
+            stage.setScene(SceneMenu);
+            stage.show();
+        }
+    }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         makeBoard();
-        Tile.makeGrid();
         
-        Random randomizer = new Random();
-        
-        laserCol1();
-        laserCol2();
-        laserRow1();
-        laserRow2();
         initializeLaser(line, spot);
     }    
 
 }
 
-//generate for loop in a for loop to generate the 8x8 gridpane with imageviews
-//use gridpane coords to access each imageview
-//overlay th imageview 2d array on the gridpane somehow
+//code source for endGame function: https://stackoverflow.com/questions/59587115/how-to-switch-to-new-scenes-without-an-mouse-drag-etc-event
