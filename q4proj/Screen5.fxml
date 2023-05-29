@@ -8,7 +8,7 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: BLACK;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="q4proj.Screen3Controller">
    <center>
-      <Label style="-fx-border-color: WHITE;" text="PLAYER 1 WINS!" textFill="WHITE" BorderPane.alignment="CENTER">
+      <Label fx:id="winnerLabel" style="-fx-border-color: WHITE;" textFill="WHITE" BorderPane.alignment="CENTER">
          <font>
             <Font name="System Bold" size="56.0" />
          </font>

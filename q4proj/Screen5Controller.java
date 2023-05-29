@@ -31,6 +31,13 @@ public class Screen5Controller implements Initializable {
     private Button back;
     
     @FXML
+    private Label winnerLabel;
+
+    public void displayWinner(String winner){
+        winnerLabel.setText("Player " + winner + " wins!");
+    }
+    
+    @FXML
     private void backWindow(ActionEvent event)throws IOException{
         Node node = (Node) event.getSource();
         Scene currentScene = node.getScene();
@@ -65,7 +72,7 @@ public class Screen5Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        displayWinner(Screen4Controller.win);
     }    
     
 }
